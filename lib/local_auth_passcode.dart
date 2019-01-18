@@ -1,7 +1,11 @@
 library local_auth_passcode;
 
 // import 'package:meta/meta.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+
+const SET_NEXT_FOCUS_DELAY_MS = 250; // milliseconds
 
 /// A Passcode Auth widget for Local Authentication.
 
@@ -9,10 +13,10 @@ class PasscodeAuth extends StatefulWidget {
   PasscodeAuth({
     Key key,
     this.inputLength = 4,
-    // @required this.onSubmit,
+    @required this.onSubmit,
   }) : super(key: key);
 
-  // final Function onSubmit;
+  final Function onSubmit;
   final int inputLength;
 
   @override
@@ -24,7 +28,7 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
 
   List<TextEditingController> _txtCtlrs;
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String _pin;
 
   @override
   void initState() {
@@ -53,41 +57,44 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
   void _buildTextEditingControllers({Function listener}) {
     _txtCtlrs =
         List.generate(widget.inputLength, (_) => TextEditingController());
+  }
 
-    if (listener != null) {
-      _txtCtlrs
-          .forEach((TextEditingController ctlr) => ctlr.addListener(listener));
+  void _onChange({
+    TextEditingController txtCtlr,
+    FocusNode focusNodeInFocus,
+    int index,
+    BuildContext context,
+  }) {
+    if (txtCtlr.text.length == 1) {
+      // set focus on next node
+      int nextIndex = (index == widget.inputLength - 1) ? 0 : index + 1;
+      FocusNode nextFocusNode = _focusNodes.elementAt(nextIndex);
+
+      // add a slight delay for UI polish
+      Future.delayed(Duration(milliseconds: SET_NEXT_FOCUS_DELAY_MS), () {
+        FocusScope.of(context).requestFocus(nextFocusNode);
+
+        // if on last elements, reset the form
+        if (index == widget.inputLength - 1) {
+          setState(() {
+            _pin = _txtCtlrs
+                .map((TextEditingController ctlr) => ctlr.text)
+                .toList()
+                .join();
+
+            _txtCtlrs.forEach((TextEditingController ctlr) => ctlr.clear());
+          });
+
+          _submit();
+        }
+      });
     }
   }
 
-  String get pin =>
-      _txtCtlrs.map((TextEditingController ctlr) => ctlr.text).toList().join();
+  void _submit() {
+    assert(widget.onSubmit != null);
 
-  void _onChange() {
-    int index;
-    TextEditingController ctlr;
-
-    FocusNode focusNodeInFocus = _focusNodes
-        .firstWhere((FocusNode node) => node.hasFocus, orElse: () => null);
-
-    if (focusNodeInFocus != null) {
-      index = _focusNodes.indexOf(focusNodeInFocus);
-      ctlr = _txtCtlrs.elementAt(index);
-    }
-
-    if (ctlr != null && ctlr.text.length == 1) {
-      // set focus on next node
-      int nextIndex = index == widget.inputLength - 1 ? 0 : index + 1;
-      FocusNode nextFocusNode = _focusNodes.elementAt(nextIndex);
-      FocusScope.of(_formKey.currentContext).requestFocus(nextFocusNode);
-
-      // if on last elements, reset the form
-      if (index == widget.inputLength - 1) {
-        print('call submit from onChange() $pin');
-
-        _formKey.currentState.reset();
-      }
-    }
+    widget.onSubmit.call(_pin);
   }
 
   InputDecoration _decoration = InputDecoration(
@@ -102,24 +109,26 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
     BuildContext context,
     bool autofocus = false,
     Function onFieldSubmitted,
+    int elementIndex,
     FocusNode focusNode,
     TextEditingController textEditingController,
   }) {
     return Expanded(
       child: Padding(
         padding: EdgeInsets.only(left: 8.0, right: 8.0),
-        child: TextFormField(
+        child: TextField(
           enabled: false,
           keyboardType: TextInputType.number,
-          textInputAction: TextInputAction.none,
+          textInputAction: TextInputAction.unspecified,
           focusNode: focusNode,
           autofocus: autofocus,
           controller: textEditingController,
-          onFieldSubmitted: (_) {
-            if (textEditingController.text.length == 1) {
-              onFieldSubmitted.call();
-            }
-          },
+          onChanged: (String val) => _onChange(
+                txtCtlr: textEditingController,
+                focusNodeInFocus: focusNode,
+                index: elementIndex,
+                context: context,
+              ),
           obscureText: true,
           maxLength: 1,
           textAlign: TextAlign.center,
@@ -140,6 +149,7 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
             context: context,
             autofocus: index == 0 ? true : false,
             onFieldSubmitted: () => _onChange,
+            elementIndex: index,
             focusNode: _focusNodes.elementAt(index),
             textEditingController: _txtCtlrs.elementAt(index),
           ));
@@ -147,15 +157,12 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Form(
-        key: _formKey,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          verticalDirection: VerticalDirection.down,
-          children: _buildRowChildren(context),
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        verticalDirection: VerticalDirection.down,
+        children: _buildRowChildren(context),
       ),
     );
   }

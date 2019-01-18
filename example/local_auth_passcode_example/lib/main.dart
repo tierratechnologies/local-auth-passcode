@@ -37,11 +37,20 @@ class PasscodeAuthDemo extends StatefulWidget {
 }
 
 class _PasscodeAuthDemoState extends State<PasscodeAuthDemo> {
+  // def a onSubmit handler fn
+  void _onSubmitHandler(String pin) {
+    print('_onSubmitHandler heard: $pin');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
-      body: Center(child: PasscodeAuth()),
+      body: Center(
+        child: PasscodeAuth(
+          onSubmit: _onSubmitHandler,
+        ),
+      ),
     );
   }
 }

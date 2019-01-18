@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       //   // is not restarted.
       //   primarySwatch: Colors.blue,
       // ),
-      // theme: ThemeData.dark(),
+      theme: ThemeData.dark(),
       home: PasscodeAuthDemo(title: 'Passcode Auth Demo'),
     );
   }

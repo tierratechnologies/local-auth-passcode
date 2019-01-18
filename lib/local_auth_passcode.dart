@@ -5,7 +5,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-const SET_NEXT_FOCUS_DELAY_MS = 250; // milliseconds
+const SET_NEXT_FOCUS_DELAY_MS = 150; // milliseconds
 
 /// A Passcode Auth widget for Local Authentication.
 
@@ -76,25 +76,33 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
 
         // if on last elements, reset the form
         if (index == widget.inputLength - 1) {
-          setState(() {
-            _pin = _txtCtlrs
-                .map((TextEditingController ctlr) => ctlr.text)
-                .toList()
-                .join();
+          _pin = _txtCtlrs
+              .map((TextEditingController ctlr) => ctlr.text)
+              .toList()
+              .join();
 
-            _txtCtlrs.forEach((TextEditingController ctlr) => ctlr.clear());
-          });
+          reset();
 
-          _submit();
+          _submit(_pin);
         }
       });
     }
   }
 
-  void _submit() {
+  void _submit(String pin) {
     assert(widget.onSubmit != null);
 
     widget.onSubmit.call(_pin);
+  }
+
+// Public API
+  void reset() {
+    _txtCtlrs.forEach((TextEditingController ctlr) => ctlr.clear());
+
+    // check that first input has focus
+    if (_focusNodes.first.hasFocus == false) {
+      FocusScope.of(context).requestFocus(_focusNodes.first);
+    }
   }
 
   InputDecoration _decoration = InputDecoration(

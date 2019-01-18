@@ -9,10 +9,12 @@ void main() {
     PasscodeAuth childWidget = PasscodeAuth();
 
     Widget builder() {
-      return Directionality(
-        textDirection: TextDirection.ltr,
-        child: Center(
-          child: Material(child: childWidget),
+      return MaterialApp(
+        title: 'LocalAuth Passcode',
+        home: Scaffold(
+          body: Center(
+            child: childWidget,
+          ),
         ),
       );
     }
@@ -26,6 +28,5 @@ void main() {
     expect(find.byType(TextFormField), findsNWidgets(4));
 
     // ensure the first input has focus
-    
   });
 }

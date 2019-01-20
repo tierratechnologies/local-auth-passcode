@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/tierratechnologies/local-auth-passcode.svg?branch=master)](https://travis-ci.org/tierratechnologies/local-auth-passcode)
 [![codecov](https://codecov.io/gh/tierratechnologies/local-auth-passcode/branch/master/graph/badge.svg)](https://codecov.io/gh/tierratechnologies/local-auth-passcode)
+
 # local_auth_passcode
 
 A new Flutter package project.

@@ -198,9 +198,14 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
     List<Widget> _rows = <Widget>[
       // title
       Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           Center(
-            child: widget.titleText,
+            child: Padding(
+              padding: EdgeInsets.all(10.0),
+              child: widget.titleText,
+            ),
           )
         ],
       ),

@@ -49,6 +49,10 @@ class _PasscodeAuthDemoState extends State<PasscodeAuthDemo> {
       body: Center(
         child: PasscodeAuth(
           onSubmit: _onSubmitHandler,
+          titleText: Text(
+            'Passcode Demo Title',
+            style: Theme.of(context).textTheme.title,
+          ),
         ),
       ),
     );

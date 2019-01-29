@@ -188,12 +188,6 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
           ));
 
   @override
-  void didUpdateWidget(PasscodeAuth oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   Widget build(BuildContext context) {
     List<Widget> _rows = <Widget>[
       // title

@@ -218,6 +218,21 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
           ],
         ),
       );
+    } else if (_focusNodes.first.hasFocus == false) {
+      _rows.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            OutlineButton(
+              child: Text(
+                'Reset',
+              ),
+              onPressed: () => reset,
+            ),
+          ],
+        ),
+      );
     }
 
     return Container(

@@ -4,8 +4,9 @@ library local_auth_passcode;
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 
-const SET_NEXT_FOCUS_DELAY_MS = 150; // milliseconds
+const SET_NEXTOrPrevious_FOCUS_DELAY_MS = 50; // milliseconds
 
 /// A Passcode Auth widget for Local Authentication.
 
@@ -24,10 +25,13 @@ class PasscodeAuth extends StatefulWidget {
 }
 
 class _PasscodeAuthState extends State<PasscodeAuth> {
+  KeyboardVisibilityNotification _keyboardVisibility =
+      KeyboardVisibilityNotification();
+
+  int _keyboardVisibilitySubscriberId;
+  bool _keyboardState;
   List<FocusNode> _focusNodes;
-
   List<TextEditingController> _txtCtlrs;
-
   String _pin;
 
   @override
@@ -37,6 +41,16 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
     _buildFocusNodes();
 
     _buildTextEditingControllers(listener: _onChange);
+
+    _keyboardState = _keyboardVisibility.isKeyboardVisible;
+
+    _keyboardVisibilitySubscriberId = _keyboardVisibility.addNewListener(
+      onChange: (bool visible) {
+        setState(() {
+          _keyboardState = visible;
+        });
+      },
+    );
   }
 
   @override
@@ -46,6 +60,9 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
 
     // dispose focus nodes
     _focusNodes.forEach((FocusNode node) => node.dispose());
+
+    // dispose listener
+    _keyboardVisibility.removeListener(_keyboardVisibilitySubscriberId);
 
     super.dispose();
   }
@@ -64,18 +81,24 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
     FocusNode focusNodeInFocus,
     int index,
     BuildContext context,
+    bool nextOrPrevious =
+        true, // move to the nextOrPrevious element (right/forward) OR to previous (left/backwards)
   }) {
     if (txtCtlr.text.length == 1) {
-      // set focus on next node
-      int nextIndex = (index == widget.inputLength - 1) ? 0 : index + 1;
-      FocusNode nextFocusNode = _focusNodes.elementAt(nextIndex);
+      // set focus on nextOrPrevious node
+      int nextOrPreviousIndex = (index == widget.inputLength - 1)
+          ? 0
+          : nextOrPrevious ? index + 1 : index - 1;
+      FocusNode nextOrPreviousFocusNode =
+          _focusNodes.elementAt(nextOrPreviousIndex);
 
       // add a slight delay for UI polish
-      Future.delayed(Duration(milliseconds: SET_NEXT_FOCUS_DELAY_MS), () {
-        FocusScope.of(context).requestFocus(nextFocusNode);
+      Future.delayed(Duration(milliseconds: SET_NEXTOrPrevious_FOCUS_DELAY_MS),
+          () {
+        FocusScope.of(context).requestFocus(nextOrPreviousFocusNode);
 
         // if on last elements, reset the form
-        if (index == widget.inputLength - 1) {
+        if (nextOrPrevious && index == widget.inputLength - 1) {
           _pin = _txtCtlrs
               .map((TextEditingController ctlr) => ctlr.text)
               .toList()
@@ -164,13 +187,43 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
+    List<Widget> _rows = <Widget>[
+      // input
+      Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         verticalDirection: VerticalDirection.down,
         children: _buildRowChildren(context),
+      ),
+    ];
+
+    if (!_keyboardState) {
+      // add a Show keyboard btn
+      _rows.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            OutlineButton(
+                child: Text(
+                  'Show Keyboard',
+                ),
+                onPressed: () {
+                  setState(() {
+                    FocusScope.of(context).requestFocus(
+                        _keyboardState ? FocusNode() : _focusNodes.first);
+                  });
+                }),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: _rows,
       ),
     );
   }

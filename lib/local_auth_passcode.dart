@@ -15,10 +15,12 @@ class PasscodeAuth extends StatefulWidget {
     Key key,
     this.inputLength = 4,
     @required this.onSubmit,
+    @required this.titleText,
   }) : super(key: key);
 
   final Function onSubmit;
   final int inputLength;
+  final Text titleText;
 
   @override
   _PasscodeAuthState createState() => _PasscodeAuthState();
@@ -194,6 +196,14 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _rows = <Widget>[
+      // title
+      Row(
+        children: <Widget>[
+          Center(
+            child: widget.titleText,
+          )
+        ],
+      ),
       // input
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,

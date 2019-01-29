@@ -218,17 +218,20 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
           ],
         ),
       );
-    } else if (_focusNodes.first.hasFocus == false) {
+    } else {
       _rows.add(
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             OutlineButton(
+              padding: EdgeInsets.all(2.0),
+              // borderSide: BorderSide.none,
               child: Text(
-                'Reset',
+                'RESET',
+                textScaleFactor: 0.85,
               ),
-              onPressed: () => reset,
+              onPressed: () => reset(),
             ),
           ],
         ),

@@ -6,7 +6,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 
-const SET_NEXTOrPrevious_FOCUS_DELAY_MS = 50; // milliseconds
+const SET_NEXTORPREVIOUS_FOCUS_DELAY_MS = 50; // milliseconds
 
 /// A Passcode Auth widget for Local Authentication.
 
@@ -95,22 +95,24 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
           _focusNodes.elementAt(nextOrPreviousIndex);
 
       // add a slight delay for UI polish
-      Future.delayed(Duration(milliseconds: SET_NEXTOrPrevious_FOCUS_DELAY_MS),
-          () {
-        FocusScope.of(context).requestFocus(nextOrPreviousFocusNode);
+      Future.delayed(
+        Duration(milliseconds: SET_NEXTORPREVIOUS_FOCUS_DELAY_MS),
+        () {
+          FocusScope.of(context).requestFocus(nextOrPreviousFocusNode);
 
-        // if on last elements, reset the form
-        if (nextOrPrevious && index == widget.inputLength - 1) {
-          _pin = _txtCtlrs
-              .map((TextEditingController ctlr) => ctlr.text)
-              .toList()
-              .join();
+          // if on last elements, reset the form
+          if (nextOrPrevious && index == widget.inputLength - 1) {
+            _pin = _txtCtlrs
+                .map((TextEditingController ctlr) => ctlr.text)
+                .toList()
+                .join();
 
-          reset();
+            reset();
 
-          _submit(_pin);
-        }
-      });
+            _submit(_pin);
+          }
+        },
+      );
     }
   }
 
@@ -152,7 +154,9 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
         child: TextField(
           enabled: false,
           keyboardType: TextInputType.number,
-          textInputAction: TextInputAction.unspecified,
+          textInputAction: elementIndex == widget.inputLength - 1
+              ? TextInputAction.done
+              : TextInputAction.next,
           focusNode: focusNode,
           autofocus: autofocus,
           controller: textEditingController,
@@ -225,6 +229,7 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
                   'Show Keyboard',
                 ),
                 onPressed: () {
+                  print('heard');
                   setState(() {
                     FocusScope.of(context).requestFocus(
                         _keyboardState ? FocusNode() : _focusNodes.first);

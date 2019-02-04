@@ -1,6 +1,6 @@
 name: local_auth_passcode
 description: A Local Auth 
-version: 0.0.5
+version: 0.0.6
 author: Tierra Tech Developers <devteam@tierratech.net>
 homepage: 
 
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  keyboard_visibility: ^0.5.1
+  # keyboard_visibility: ^0.5.1
 
 dev_dependencies:
   flutter_test:

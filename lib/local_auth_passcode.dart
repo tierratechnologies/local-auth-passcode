@@ -4,7 +4,7 @@ library local_auth_passcode;
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
+// import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 const SET_NEXTORPREVIOUS_FOCUS_DELAY_MS = 50; // milliseconds
 
@@ -27,11 +27,11 @@ class PasscodeAuth extends StatefulWidget {
 }
 
 class _PasscodeAuthState extends State<PasscodeAuth> {
-  KeyboardVisibilityNotification _keyboardVisibility =
-      KeyboardVisibilityNotification();
+  // KeyboardVisibilityNotification _keyboardVisibility =
+  //     KeyboardVisibilityNotification();
 
-  int _keyboardVisibilitySubscriberId;
-  bool _keyboardState;
+  // int _keyboardVisibilitySubscriberId;
+  // bool _keyboardState;
   List<FocusNode> _focusNodes;
   List<TextEditingController> _txtCtlrs;
   String _pin;
@@ -44,15 +44,15 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
 
     _buildTextEditingControllers(listener: _onChange);
 
-    _keyboardState = _keyboardVisibility.isKeyboardVisible;
+    // _keyboardState = _keyboardVisibility.isKeyboardVisible;
 
-    _keyboardVisibilitySubscriberId = _keyboardVisibility.addNewListener(
-      onChange: (bool visible) {
-        setState(() {
-          _keyboardState = visible;
-        });
-      },
-    );
+    // _keyboardVisibilitySubscriberId = _keyboardVisibility.addNewListener(
+    //   onChange: (bool visible) {
+    //     setState(() {
+    //       _keyboardState = visible;
+    //     });
+    //   },
+    // );
   }
 
   @override
@@ -64,7 +64,7 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
     _focusNodes.forEach((FocusNode node) => node.dispose());
 
     // dispose listener
-    _keyboardVisibility.removeListener(_keyboardVisibilitySubscriberId);
+    // _keyboardVisibility.removeListener(_keyboardVisibilitySubscriberId);
 
     super.dispose();
   }
@@ -127,9 +127,10 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
     _txtCtlrs.forEach((TextEditingController ctlr) => ctlr.clear());
 
     // check that first input has focus
-    if (_focusNodes.first.hasFocus == false) {
-      FocusScope.of(context).requestFocus(_focusNodes.first);
-    }
+    FocusScope.of(context).requestFocus(FocusNode());
+
+    Future.delayed(Duration(milliseconds: 50),
+        () => FocusScope.of(context).requestFocus(_focusNodes.first));
   }
 
   InputDecoration _decoration = InputDecoration(
@@ -215,48 +216,63 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
         verticalDirection: VerticalDirection.down,
         children: _buildRowChildren(context),
       ),
+      // reset btn
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          OutlineButton(
+            padding: EdgeInsets.all(2.0),
+            // borderSide: BorderSide.none,
+            child: Text(
+              'RESET',
+              textScaleFactor: 0.85,
+            ),
+            onPressed: () => reset(),
+          ),
+        ],
+      ),
     ];
 
-    if (!_keyboardState) {
-      // add a Show keyboard btn
-      _rows.add(
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            OutlineButton(
-                child: Text(
-                  'Show Keyboard',
-                ),
-                onPressed: () {
-                  print('heard');
-                  setState(() {
-                    FocusScope.of(context).requestFocus(
-                        _keyboardState ? FocusNode() : _focusNodes.first);
-                  });
-                }),
-          ],
-        ),
-      );
-    } else {
-      _rows.add(
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            OutlineButton(
-              padding: EdgeInsets.all(2.0),
-              // borderSide: BorderSide.none,
-              child: Text(
-                'RESET',
-                textScaleFactor: 0.85,
-              ),
-              onPressed: () => reset(),
-            ),
-          ],
-        ),
-      );
-    }
+    // if (!_keyboardState) {
+    //   // add a Show keyboard btn
+    //   _rows.add(
+    //     Row(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       mainAxisSize: MainAxisSize.max,
+    //       children: <Widget>[
+    //         OutlineButton(
+    //             child: Text(
+    //               'Show Keyboard',
+    //             ),
+    //             onPressed: () {
+    //               setState(() {
+    //                 FocusScope.of(context).requestFocus(
+    //                     _keyboardState ? FocusNode() : _focusNodes.first);
+    //               });
+    //             }),
+    //       ],
+    //     ),
+    //   );
+    // } else {
+    //   _rows.add(
+    //     Row(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       mainAxisSize: MainAxisSize.max,
+    //       children: <Widget>[
+    //         OutlineButton(
+    //           padding: EdgeInsets.all(2.0),
+    //           // borderSide: BorderSide.none,
+    //           child: Text(
+    //             'RESET',
+    //             textScaleFactor: 0.85,
+    //           ),
+    //           onPressed: () => reset(),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
 
     return Container(
       child: Column(

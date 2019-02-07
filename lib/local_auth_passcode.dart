@@ -107,7 +107,7 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
                 .toList()
                 .join();
 
-            reset();
+            reset(context);
 
             _submit(_pin);
           }
@@ -123,7 +123,9 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
   }
 
 // Public API
-  void reset() {
+  void reset(BuildContext context) {
+    if (mounted != true) return;
+
     _txtCtlrs.forEach((TextEditingController ctlr) => ctlr.clear());
 
     // check that first input has focus
@@ -228,7 +230,7 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
               'RESET',
               textScaleFactor: 0.85,
             ),
-            onPressed: () => reset(),
+            onPressed: () => reset(context),
           ),
         ],
       ),

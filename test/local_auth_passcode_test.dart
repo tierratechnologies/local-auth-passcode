@@ -14,6 +14,7 @@ void main() {
     };
 
     PasscodeAuth childWidget = PasscodeAuth(
+      titleText: Text('PasscodeAuth Test'),
       onSubmit: submitHandler,
     );
 
@@ -55,6 +56,7 @@ void main() {
     };
 
     PasscodeAuth childWidget = PasscodeAuth(
+      titleText: Text('PasscodeAuth Test'),
       onSubmit: submitHandler,
     );
 

@@ -4,7 +4,6 @@ library local_auth_passcode;
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-// import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 const SET_NEXTORPREVIOUS_FOCUS_DELAY_MS = 50; // milliseconds
 
@@ -27,11 +26,6 @@ class PasscodeAuth extends StatefulWidget {
 }
 
 class _PasscodeAuthState extends State<PasscodeAuth> {
-  // KeyboardVisibilityNotification _keyboardVisibility =
-  //     KeyboardVisibilityNotification();
-
-  // int _keyboardVisibilitySubscriberId;
-  // bool _keyboardState;
   List<FocusNode> _focusNodes;
   List<TextEditingController> _txtCtlrs;
   String _pin;
@@ -43,16 +37,6 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
     _buildFocusNodes();
 
     _buildTextEditingControllers(listener: _onChange);
-
-    // _keyboardState = _keyboardVisibility.isKeyboardVisible;
-
-    // _keyboardVisibilitySubscriberId = _keyboardVisibility.addNewListener(
-    //   onChange: (bool visible) {
-    //     setState(() {
-    //       _keyboardState = visible;
-    //     });
-    //   },
-    // );
   }
 
   @override
@@ -62,9 +46,6 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
 
     // dispose focus nodes
     _focusNodes.forEach((FocusNode node) => node.dispose());
-
-    // dispose listener
-    // _keyboardVisibility.removeListener(_keyboardVisibilitySubscriberId);
 
     super.dispose();
   }
@@ -83,8 +64,8 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
     FocusNode focusNodeInFocus,
     int index,
     BuildContext context,
-    bool nextOrPrevious =
-        true, // move to the nextOrPrevious element (right/forward) OR to previous (left/backwards)
+    // move to the nextOrPrevious element (right/forward) OR to previous (left/backwards)
+    bool nextOrPrevious = true,
   }) {
     if (txtCtlr.text.length == 1) {
       // set focus on nextOrPrevious node
@@ -155,7 +136,8 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
       child: Padding(
         padding: EdgeInsets.only(left: 8.0, right: 8.0),
         child: TextField(
-          enabled: false,
+          key: ValueKey(elementIndex),
+          // enabled: false,
           keyboardType: TextInputType.number,
           textInputAction: elementIndex == widget.inputLength - 1
               ? TextInputAction.done
@@ -225,7 +207,6 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
         children: <Widget>[
           OutlineButton(
             padding: EdgeInsets.all(2.0),
-            // borderSide: BorderSide.none,
             child: Text(
               'RESET',
               textScaleFactor: 0.85,
@@ -235,46 +216,6 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
         ],
       ),
     ];
-
-    // if (!_keyboardState) {
-    //   // add a Show keyboard btn
-    //   _rows.add(
-    //     Row(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       mainAxisSize: MainAxisSize.max,
-    //       children: <Widget>[
-    //         OutlineButton(
-    //             child: Text(
-    //               'Show Keyboard',
-    //             ),
-    //             onPressed: () {
-    //               setState(() {
-    //                 FocusScope.of(context).requestFocus(
-    //                     _keyboardState ? FocusNode() : _focusNodes.first);
-    //               });
-    //             }),
-    //       ],
-    //     ),
-    //   );
-    // } else {
-    //   _rows.add(
-    //     Row(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       mainAxisSize: MainAxisSize.max,
-    //       children: <Widget>[
-    //         OutlineButton(
-    //           padding: EdgeInsets.all(2.0),
-    //           // borderSide: BorderSide.none,
-    //           child: Text(
-    //             'RESET',
-    //             textScaleFactor: 0.85,
-    //           ),
-    //           onPressed: () => reset(),
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // }
 
     return Container(
       child: Column(

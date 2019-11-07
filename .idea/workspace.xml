@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1694fdb8-e037-4161-be1b-6a7b5f607ca9" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/local_auth_passcode.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/local_auth_passcode.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/local_auth_passcode.iml" beforeDir="false" afterPath="$PROJECT_DIR$/local_auth_passcode.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -63,6 +60,14 @@
       <updated>1547775413475</updated>
       <workItem from="1547775416972" duration="543000" />
     </task>
+    <task id="LOCAL-00001" summary="trying to resolve dependency issue being triggered by dispose">
+      <created>1573166449155</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1573166449155</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -81,5 +86,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="trying to resolve dependency issue being triggered by dispose" />
+    <option name="LAST_COMMIT_MESSAGE" value="trying to resolve dependency issue being triggered by dispose" />
   </component>
 </project>

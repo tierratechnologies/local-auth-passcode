@@ -110,10 +110,12 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
     _txtCtlrs.forEach((TextEditingController ctlr) => ctlr.clear());
 
     // check that first input has focus
-    FocusScope.of(context).requestFocus(FocusNode());
+//    FocusScope.of(context).requestFocus(FocusNode());
+//
+//    Future.delayed(Duration(milliseconds: 50),
+//        () => FocusScope.of(context).requestFocus(_focusNodes.first));
 
-    Future.delayed(Duration(milliseconds: 50),
-        () => FocusScope.of(context).requestFocus(_focusNodes.first));
+    FocusScope.of(context).requestFocus(_focusNodes.first);
   }
 
   InputDecoration _decoration = InputDecoration(

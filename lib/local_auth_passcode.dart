@@ -13,6 +13,7 @@ class PasscodeAuth extends StatefulWidget {
   PasscodeAuth({
     Key key,
     this.inputLength = 4,
+    this.autoFocus = true,
     @required this.onSubmit,
     @required this.titleText,
   }) : super(key: key);
@@ -20,7 +21,7 @@ class PasscodeAuth extends StatefulWidget {
   final Function onSubmit;
   final int inputLength;
   final Text titleText;
-
+  final bool autoFocus;
   @override
   _PasscodeAuthState createState() => _PasscodeAuthState();
 }
@@ -71,7 +72,9 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
       // set focus on nextOrPrevious node
       int nextOrPreviousIndex = (index == widget.inputLength - 1)
           ? 0
-          : nextOrPrevious ? index + 1 : index - 1;
+          : nextOrPrevious
+              ? index + 1
+              : index - 1;
       FocusNode nextOrPreviousFocusNode =
           _focusNodes.elementAt(nextOrPreviousIndex);
 
@@ -148,11 +151,11 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
           autofocus: autofocus,
           controller: textEditingController,
           onChanged: (String val) => _onChange(
-                txtCtlr: textEditingController,
-                focusNodeInFocus: focusNode,
-                index: elementIndex,
-                context: context,
-              ),
+            txtCtlr: textEditingController,
+            focusNodeInFocus: focusNode,
+            index: elementIndex,
+            context: context,
+          ),
           obscureText: true,
           maxLength: 1,
           textAlign: TextAlign.center,
@@ -171,7 +174,7 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
       widget.inputLength,
       (int index) => _buildInputField(
             context: context,
-            autofocus: index == 0 ? true : false,
+            autofocus: index == 0 ? widget.autoFocus : false,
             onFieldSubmitted: () => _onChange,
             elementIndex: index,
             focusNode: _focusNodes.elementAt(index),

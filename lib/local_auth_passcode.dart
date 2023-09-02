@@ -11,11 +11,11 @@ const SET_NEXTORPREVIOUS_FOCUS_DELAY_MS = 50; // milliseconds
 
 class PasscodeAuth extends StatefulWidget {
   PasscodeAuth({
-    Key key,
+    Key? key,
     this.inputLength = 4,
     this.autoFocus = true,
-    @required this.onSubmit,
-    @required this.titleText,
+    required this.onSubmit,
+    required this.titleText,
   }) : super(key: key);
 
   final Function onSubmit;
@@ -23,13 +23,13 @@ class PasscodeAuth extends StatefulWidget {
   final Text titleText;
   final bool autoFocus;
   @override
-  _PasscodeAuthState createState() => _PasscodeAuthState();
+  PasscodeAuthState createState() => PasscodeAuthState();
 }
 
-class _PasscodeAuthState extends State<PasscodeAuth> {
-  List<FocusNode> _focusNodes;
-  List<TextEditingController> _txtCtlrs;
-  String _pin;
+class PasscodeAuthState extends State<PasscodeAuth> {
+  late List<FocusNode> focusNodes;
+  late List<TextEditingController> txtCtlrs;
+  String? _pin;
 
   @override
   void initState() {
@@ -43,28 +43,28 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
   @override
   void dispose() {
     // disponse text editing controllers
-    _txtCtlrs.forEach((TextEditingController ctlr) => ctlr.dispose());
+    txtCtlrs.forEach((TextEditingController ctlr) => ctlr.dispose());
 
     // dispose focus nodes
-    _focusNodes.forEach((FocusNode node) => node.dispose());
+    focusNodes.forEach((FocusNode node) => node.dispose());
 
     super.dispose();
   }
 
   void _buildFocusNodes() {
-    _focusNodes = List.generate(widget.inputLength, (_) => FocusNode());
+    focusNodes = List.generate(widget.inputLength, (_) => FocusNode());
   }
 
-  void _buildTextEditingControllers({Function listener}) {
-    _txtCtlrs =
+  void _buildTextEditingControllers({Function? listener}) {
+    txtCtlrs =
         List.generate(widget.inputLength, (_) => TextEditingController());
   }
 
   void _onChange({
-    TextEditingController txtCtlr,
-    FocusNode focusNodeInFocus,
-    int index,
-    BuildContext context,
+    required TextEditingController txtCtlr,
+    required FocusNode focusNodeInFocus,
+    required int index,
+    required BuildContext context,
     // move to the nextOrPrevious element (right/forward) OR to previous (left/backwards)
     bool nextOrPrevious = true,
   }) {
@@ -76,7 +76,7 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
               ? index + 1
               : index - 1;
       FocusNode nextOrPreviousFocusNode =
-          _focusNodes.elementAt(nextOrPreviousIndex);
+          focusNodes.elementAt(nextOrPreviousIndex);
 
       // add a slight delay for UI polish
       Future.delayed(
@@ -86,14 +86,14 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
 
           // if on last elements, reset the form
           if (nextOrPrevious && index == widget.inputLength - 1) {
-            _pin = _txtCtlrs
+            _pin = txtCtlrs
                 .map((TextEditingController ctlr) => ctlr.text)
                 .toList()
                 .join();
 
             reset(context);
 
-            _submit(_pin);
+            _submit(_pin!);
           }
         },
       );
@@ -101,7 +101,7 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
   }
 
   void _submit(String pin) {
-    assert(widget.onSubmit != null);
+    // assert(widget.onSubmit != null);
 
     widget.onSubmit.call(_pin);
   }
@@ -110,7 +110,7 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
   void reset(BuildContext context) {
     if (mounted != true) return;
 
-    _txtCtlrs.forEach((TextEditingController ctlr) => ctlr.clear());
+    txtCtlrs.forEach((TextEditingController ctlr) => ctlr.clear());
 
     // check that first input has focus
 //    FocusScope.of(context).requestFocus(FocusNode());
@@ -118,7 +118,7 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
 //    Future.delayed(Duration(milliseconds: 50),
 //        () => FocusScope.of(context).requestFocus(_focusNodes.first));
 
-    FocusScope.of(context).requestFocus(_focusNodes.first);
+    FocusScope.of(context).requestFocus(focusNodes.first);
   }
 
   InputDecoration _decoration = InputDecoration(
@@ -130,12 +130,12 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
   );
 
   Widget _buildInputField({
-    BuildContext context,
+    required BuildContext context,
     bool autofocus = false,
-    Function onFieldSubmitted,
-    int elementIndex,
-    FocusNode focusNode,
-    TextEditingController textEditingController,
+    required Function onFieldSubmitted,
+    required int elementIndex,
+    required FocusNode focusNode,
+    required TextEditingController textEditingController,
   }) {
     return Expanded(
       child: Padding(
@@ -160,8 +160,8 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
           maxLength: 1,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: Theme.of(context).textTheme.display1.fontSize,
-            color: Theme.of(context).textTheme.display1.color,
+            fontSize: Theme.of(context).textTheme.headlineMedium?.fontSize,
+            color: Theme.of(context).textTheme.headlineMedium?.color,
           ),
           enableInteractiveSelection: false,
           decoration: _decoration,
@@ -177,8 +177,8 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
             autofocus: index == 0 ? widget.autoFocus : false,
             onFieldSubmitted: () => _onChange,
             elementIndex: index,
-            focusNode: _focusNodes.elementAt(index),
-            textEditingController: _txtCtlrs.elementAt(index),
+            focusNode: focusNodes.elementAt(index),
+            textEditingController: txtCtlrs.elementAt(index),
           ));
 
   @override
@@ -210,8 +210,8 @@ class _PasscodeAuthState extends State<PasscodeAuth> {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          OutlineButton(
-            padding: EdgeInsets.all(2.0),
+          OutlinedButton(
+            // padding: EdgeInsets.all(2.0),
             child: Text(
               'RESET',
               textScaleFactor: 0.85,

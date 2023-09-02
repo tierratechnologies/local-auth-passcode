@@ -9,7 +9,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('smoke test', () {
-    FlutterDriver driver;
+    late FlutterDriver driver;
     final String title = 'Passcode Demo Title';
     final String resetBtnText = 'RESET';
     final int delayMS = 100;
@@ -22,10 +22,10 @@ void main() {
     SerializableFinder thirdInput = find.byValueKey(2);
     SerializableFinder forthInput = find.byValueKey(3);
 
-    String firstInputText;
-    String secondInputText;
-    String thirdInputText;
-    String forthInputText;
+    String? firstInputText;
+    String? secondInputText;
+    String? thirdInputText;
+    String? forthInputText;
 
     setUpAll(() async {
       driver = await FlutterDriver.connect(printCommunication: true);
@@ -42,9 +42,7 @@ void main() {
     });
 
     tearDownAll(() async {
-      if (driver != null) await driver.close();
-
-      return null;
+      await driver.close();
     });
 
     test('Enter text into each input field', () async {

@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
 }
 
 class PasscodeAuthDemo extends StatefulWidget {
-  PasscodeAuthDemo({Key key, this.title}) : super(key: key);
+  PasscodeAuthDemo({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -51,7 +51,7 @@ class _PasscodeAuthDemoState extends State<PasscodeAuthDemo> {
           onSubmit: _onSubmitHandler,
           titleText: Text(
             'Passcode Demo Title',
-            style: Theme.of(context).textTheme.title,
+            style: Theme.of(context).textTheme.displayMedium,
           ),
         ),
       ),

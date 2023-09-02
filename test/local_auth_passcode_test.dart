@@ -40,7 +40,7 @@ void main() {
 
     expect(
         find.byWidgetPredicate((Widget widget) =>
-            widget is TextField && widget.focusNode.hasFocus == true),
+            widget is TextField && widget.focusNode?.hasFocus == true),
         findsOneWidget);
   });
 
@@ -73,7 +73,7 @@ void main() {
 
     await tester.enterText(
         find.byWidgetPredicate((Widget widget) =>
-            widget is TextField && widget.focusNode.hasFocus == true),
+            widget is TextField && widget.focusNode?.hasFocus == true),
         '1');
 
     await tester.pumpAndSettle();
@@ -81,15 +81,15 @@ void main() {
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is TextField &&
-            widget.controller.text.length == 1 &&
-            widget.focusNode.hasFocus == false),
+            widget.controller?.text.length == 1 &&
+            widget.focusNode?.hasFocus == false),
         findsOneWidget);
 
     expect(
         find.byWidgetPredicate((Widget widget) =>
             widget is TextField &&
-            widget.focusNode.hasFocus == true &&
-            widget.controller.text.length == 0),
+            widget.focusNode?.hasFocus == true &&
+            widget.controller?.text.length == 0),
         findsOneWidget);
   });
 }
